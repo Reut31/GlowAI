@@ -1,0 +1,16 @@
+# וירטואל env
+.venv/
+
+# מודלים וכבדים
+checkpoints/
+
+# תוצאות סיווג
+to_classify/results_run*/
+
+# קבצי מערכת
+__pycache__/
+*.pyc
+
+# IDE
+.idea/
+.vscode/
