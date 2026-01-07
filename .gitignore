@@ -2,10 +2,10 @@
 .venv/
 
 # מודלים וכבדים
-checkpoints/
+# התעלמות רק מהמודלים הכבדים
+checkpoints/**/*.pt
 
-# תוצאות סיווג
-to_classify/results_run*/
+
 
 # קבצי מערכת
 __pycache__/
