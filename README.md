@@ -39,7 +39,7 @@ We evaluate the model on two distinct sets:
 ### 1. Clone the repository
 
 bash 
-git clone [https://github.com/YourUsername/GlowAIProj.git](https://github.com/YourUsername/GlowAIProj.git)
+git clone [https://github.com/ReutSasson/GlowAIProj.git](https://github.com/YourUsername/GlowAIProj.git)
 cd GlowAIProj/
 
 
@@ -47,6 +47,8 @@ cd GlowAIProj/
 ### 2. Install Dependencies
 pip install -r requirements.txt
 
+### 📂 Folder Structure
+```text
 GlowAIProj/
 │
 ├── code/
@@ -68,7 +70,6 @@ GlowAIProj/
 ├── slides/                             # Project Presentations (PDF/PPTX)
 ├── checkpoints/                        # Saved model weights
 └── README.md
-
 
 ### 🏃‍♂️ How to Run
 Step 1: Generate Data
