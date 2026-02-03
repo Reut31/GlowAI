@@ -1,4 +1,4 @@
-<img width="600" height="500" alt="confusion_matrix" src="https://github.com/user-attachments/assets/acb50599-19e5-4744-806f-46f14817d842" /># GlowAI: Synthetic Skin Condition Analysis & Data Generation
+Condition Analysis & Data Generation
 
 **GlowAI** is a computer vision project designed to address the scarcity of medical skin datasets. Standard datasets are hard to obtain due to privacy concerns.
 This project introduces a **Synthetic Skin Simulator** that uses classic Computer Vision (OpenCV) to generate medically relevant training data, creating realistic **Acne** and **Erythema** lesions on clean faces to train robust classification models.
@@ -12,6 +12,7 @@ This project introduces a **Synthetic Skin Simulator** that uses classic Compute
 
 ## 🚀 Project Pipeline
 Our workflow consists of three main stages:
+
 <img width="1536" height="1024" alt="ChatGPT Image Jan 13, 2026, 02_08_06 PM" src="https://github.com/user-attachments/assets/97d64621-50df-4898-81a4-8b2df40ad142" />
 
 ### 1. Synthetic Data Generation (The Simulator)
@@ -19,7 +20,7 @@ Our workflow consists of three main stages:
 * **Erythema Simulation:** We apply irregular noise masks and red-channel blending to simulate skin redness patches naturally.
 * **Output:** A labeled dataset of synthetic skin conditions generated from clean facial images.
 
-![Simulator Examples](visuals/simulator_examples.png)
+
 
 ### 2. Model Training (The Classifier)
 * **Architecture:** We use an **EfficientNet-B2** backbone pretrained on ImageNet.
@@ -81,9 +82,13 @@ python code/train_skin_cls.py --data dataset --epochs 15 --out checkpoints/run_f
 
 ### 📊 Results Snapshot (Best Run)
 Below are the results from our best experiment (Run 9), comparing performance on synthetic vs. real data.
-![Uploadi<img width="600" height="400" alt="loss_curve" src="https://github.com/user-attachments/assets/67b5c928-532a-4bfe-bf34-018004bf4a6f" />[metrics.csv](https://github.com/user-attachments/files/25055400/metrics.csv)
-ng confusion_matrix.png…]()
-<img width="600" height="400" alt="accuracy_curve" src="https://github.com/user-attachments/assets/f80b12b0-6ce5-44f6-9b43-e7257d83a01b" />
+
+<img width="600" height="500" alt="confusion_matrix" src="https://github.com/user-attachments/assets/e1163e01-88f6-4821-8deb-52ce7758c7a1" />
+
+<img width="600" height="400" alt="accuracy_curve" src="https://github.com/user-attachments/assets/370b350a-43f8-4a23-96d2-891f18bf1ac2" />
+
+<img width="600" height="400" alt="loss_curve" src="https://github.com/user-attachments/assets/8bb8b603-ca8a-4eaa-b40f-ef9745620797" />
+
 
 
 ### 💾 Data Access
