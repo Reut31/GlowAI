@@ -47,7 +47,6 @@ cd GlowAIProj/
 ### 2. Install Dependencies
 pip install -r requirements.txt
 
-### 📂 Folder Structure
 GlowAIProj/
 │
 ├── code/
@@ -69,7 +68,6 @@ GlowAIProj/
 ├── slides/                             # Project Presentations (PDF/PPTX)
 ├── checkpoints/                        # Saved model weights
 └── README.md
-
 
 
 ### 🏃‍♂️ How to Run
