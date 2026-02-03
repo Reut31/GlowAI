@@ -1,4 +1,4 @@
-# GlowAI: Synthetic Skin Condition Analysis & Data Generation
+<img width="600" height="500" alt="confusion_matrix" src="https://github.com/user-attachments/assets/acb50599-19e5-4744-806f-46f14817d842" /># GlowAI: Synthetic Skin Condition Analysis & Data Generation
 
 **GlowAI** is a computer vision project designed to address the scarcity of medical skin datasets. Standard datasets are hard to obtain due to privacy concerns.
 This project introduces a **Synthetic Skin Simulator** that uses classic Computer Vision (OpenCV) to generate medically relevant training data, creating realistic **Acne** and **Erythema** lesions on clean faces to train robust classification models.
@@ -12,6 +12,7 @@ This project introduces a **Synthetic Skin Simulator** that uses classic Compute
 
 ## 🚀 Project Pipeline
 Our workflow consists of three main stages:
+<img width="1536" height="1024" alt="ChatGPT Image Jan 13, 2026, 02_08_06 PM" src="https://github.com/user-attachments/assets/97d64621-50df-4898-81a4-8b2df40ad142" />
 
 ### 1. Synthetic Data Generation (The Simulator)
 * **Acne Simulation:** We use OpenCV to draw randomized circles with specific Gaussian blur and opacity to mimic the texture and inflammation of pimples.
@@ -80,7 +81,9 @@ python code/train_skin_cls.py --data dataset --epochs 15 --out checkpoints/run_f
 
 ### 📊 Results Snapshot (Best Run)
 Below are the results from our best experiment (Run 9), comparing performance on synthetic vs. real data.
-<img width="1536" height="1024" alt="ChatGPT Image Jan 13, 2026, 02_08_06 PM" src="https://github.com/user-attachments/assets/97d64621-50df-4898-81a4-8b2df40ad142" />
+![Uploadi<img width="600" height="400" alt="loss_curve" src="https://github.com/user-attachments/assets/67b5c928-532a-4bfe-bf34-018004bf4a6f" />[metrics.csv](https://github.com/user-attachments/files/25055400/metrics.csv)
+ng confusion_matrix.png…]()
+<img width="600" height="400" alt="accuracy_curve" src="https://github.com/user-attachments/assets/f80b12b0-6ce5-44f6-9b43-e7257d83a01b" />
 
 
 ### 💾 Data Access
