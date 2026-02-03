@@ -70,7 +70,7 @@ GlowAIProj/
 ├── slides/                             # Project Presentations (PDF/PPTX)
 ├── checkpoints/                        # Saved model weights
 └── README.md
-
+```
 ### 🏃‍♂️ How to Run
 Step 1: Generate Data
 Run the simulator to create synthetic acne/erythema on clean faces:
