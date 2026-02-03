@@ -39,7 +39,7 @@ We evaluate the model on two distinct sets:
 ### 1. Clone the repository
 
 bash 
-git clone [https://github.com/ReutSasson/GlowAIProj.git](https://github.com/YourUsername/GlowAIProj.git)
+git clone [https://github.com/ReutSasson/GlowAIProj.git](https://github.com/Reut31/GlowAI)
 cd GlowAIProj/
 
 
