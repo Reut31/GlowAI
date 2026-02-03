@@ -12,22 +12,31 @@ from experiment_logger import ExperimentLogger
 import matplotlib.pyplot as plt
 import numpy as np
 
-from sort_new_images import sort_images  # 👈 חדש – סיווג תמונות אחרי האימון
+# Import the classification function for post-training inference
+from sort_new_images import sort_images  
 
 
 def build_transforms(img_size: int = 224):
+    """
+    Constructs the data augmentation pipeline for training and the standard transform for validation.
+    
+    Args:
+        img_size (int): Target image size (default 224 for EfficientNet).
+    Returns:
+        tuple: (train_transforms, val_transforms)
+    """
     train_tf = transforms.Compose([
         transforms.Resize((img_size, img_size)),
-        transforms.RandomHorizontalFlip(p=0.5),
-        transforms.RandomRotation(8),
-        transforms.ColorJitter(
+        transforms.RandomHorizontalFlip(p=0.5), # Data Augmentation: Random flip
+        transforms.RandomRotation(8),           # Data Augmentation: Slight rotation
+        transforms.ColorJitter(                 # Data Augmentation: Color adjustments
             brightness=0.15,
             contrast=0.15,
             saturation=0.10,
             hue=0.02
         ),
         transforms.ToTensor(),
-        transforms.Normalize(
+        transforms.Normalize(                   # Normalize using ImageNet statistics
             mean=(0.485, 0.456, 0.406),
             std=(0.229, 0.224, 0.225),
         ),
@@ -46,6 +55,10 @@ def build_transforms(img_size: int = 224):
 
 @torch.no_grad()
 def evaluate(model, loader, device, criterion):
+    """
+    Evaluates the model on the validation set.
+    Returns the average loss and accuracy.
+    """
     model.eval()
     total_loss = 0.0
     correct = 0
@@ -67,6 +80,9 @@ def evaluate(model, loader, device, criterion):
 
 
 def train_one_epoch(model, loader, device, optimizer, criterion):
+    """
+    Runs one epoch of training: Forward pass, Loss computation, Backward pass, Optimizer step.
+    """
     model.train()
     total_loss = 0.0
     correct = 0
@@ -92,6 +108,9 @@ def train_one_epoch(model, loader, device, optimizer, criterion):
 
 @torch.no_grad()
 def save_confusion_matrix(model, loader, device, class_names, logs_dir: Path):
+    """
+    Generates and saves a Confusion Matrix plot to visualize per-class performance.
+    """
     model.eval()
     num_classes = len(class_names)
 
@@ -111,6 +130,7 @@ def save_confusion_matrix(model, loader, device, class_names, logs_dir: Path):
 
     cm_np = cm.cpu().numpy()
 
+    # Plotting using Matplotlib
     fig, ax = plt.subplots(figsize=(6, 5))
     im = ax.imshow(cm_np, interpolation="nearest", cmap="Blues")
     plt.colorbar(im, ax=ax)
@@ -122,6 +142,7 @@ def save_confusion_matrix(model, loader, device, class_names, logs_dir: Path):
     ax.set_xticklabels(class_names, rotation=45, ha="right")
     ax.set_yticklabels(class_names)
 
+    # Add text annotations to the cells
     thresh = cm_np.max() / 2.0 if cm_np.max() > 0 else 0.5
     for i in range(num_classes):
         for j in range(num_classes):
@@ -145,6 +166,9 @@ def save_confusion_matrix(model, loader, device, class_names, logs_dir: Path):
 
 
 def set_requires_grad(model, flag: bool):
+    """
+    Helper function to freeze (flag=False) or unfreeze (flag=True) model parameters.
+    """
     for p in model.parameters():
         p.requires_grad = flag
 
@@ -173,7 +197,7 @@ def main():
         help="output dir for checkpoints + logs",
     )
 
-    # 👇 חדשים – כדי לדעת איפה לשמור את התוצאות (results_run3 וכו’)
+    # New args - defining where to save results (e.g., results_run3)
     ap.add_argument(
         "--classify_images",
         type=str,
@@ -189,6 +213,7 @@ def main():
 
     args = ap.parse_args()
 
+    # --- Step 1: Data Setup ---
     data_dir = Path(args.data)
     train_dir = data_dir / "train"
     val_dir = data_dir / "val"
@@ -225,6 +250,7 @@ def main():
         pin_memory=False,
     )
 
+    # --- Step 2: Model Initialization ---
     model = timm.create_model(
         args.model, pretrained=True, num_classes=num_classes
     )
@@ -240,7 +266,9 @@ def main():
     best_val_acc = 0.0
     optimizer = None
 
+    # --- Step 3: Training Loop ---
     for epoch in range(1, args.epochs + 1):
+        # Phase 1: Freeze backbone, train only the head
         if epoch == 1:
             set_requires_grad(model, False)
             for p in model.get_classifier().parameters():
@@ -252,6 +280,7 @@ def main():
             )
             print(f"Epoch {epoch}: training HEAD only (frozen backbone).")
 
+        # Phase 2: Unfreeze all layers for Fine-Tuning
         if epoch == args.freeze_epochs + 1:
             set_requires_grad(model, True)
             optimizer = torch.optim.AdamW(
@@ -268,7 +297,7 @@ def main():
             model, val_loader, device, criterion
         )
 
-        # 👈 רק נרשום ל-CSV, בלי לייצר גרפים עדיין
+        # Log to CSV (Metrics only, plots generated later)
         logger.log_epoch(
             epoch=epoch,
             train_loss=train_loss,
@@ -283,6 +312,7 @@ def main():
             f"val loss {val_loss:.4f} acc {val_acc:.3f}"
         )
 
+        # Save Best Checkpoint
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             ckpt_path = out_dir / "best.pt"
@@ -299,7 +329,9 @@ def main():
 
     print("Done training. Best val acc:", best_val_acc)
 
-    # 1️⃣ קודם – תוצאות: סיווג תמונות חדשות לתיקיית results_runX
+    # --- Step 4: Post-Training Tasks ---
+
+    # 1. First - Results: Classify new images to results_runX (if arguments provided)
     if args.classify_images is not None and args.classify_out is not None:
         print(f"Sorting new images: {args.classify_images} -> {args.classify_out}")
         try:
@@ -312,12 +344,12 @@ def main():
             )
             print("Finished sorting images.")
         except FileNotFoundError as e:
-            # אם אין תמונות – נדלג אבל לא נקרוס
+            # If no images found - skip but don't crash
             print(f"[WARN] Could not sort images (no images found). Skipping. Details: {e}")
     else:
         print("Skipping image classification step (no --classify_images/--classify_out).")
 
-    # 2️⃣ רק אחרי (או אם דילגנו) – מייצרים גרפים + confusion matrix
+    # 2. Only after (or if skipped) - generate plots + confusion matrix
     logger.save_plots()
     logs_dir = out_dir / "logs"
     save_confusion_matrix(
@@ -327,7 +359,6 @@ def main():
         class_names=train_ds.classes,
         logs_dir=logs_dir,
     )
-
 
 
 if __name__ == "__main__":
